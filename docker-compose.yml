@@ -22,7 +22,7 @@ services:
       - .env
     command: npm run start:dev
     ports:
-      - "8012:8012"
+      - "8080:8080"
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
