@@ -6,7 +6,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/templates:/etc/nginx/templates
     ports:
-      - "80:80"
+      - "85:85"
     depends_on:
       - elicelab_backend
     networks:
@@ -22,7 +22,10 @@ services:
       - .env
     command: npm run start:dev
     ports:
-      - "7070:7070"
+      - "8012:8012"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - elicelab_db
     networks:
@@ -35,7 +38,7 @@ services:
       - .env
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5433"
     networks:
       - elicelab-network
 
