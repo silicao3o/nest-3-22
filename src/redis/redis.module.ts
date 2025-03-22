@@ -5,7 +5,7 @@ import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
-    CacheModule.register({
+    CacheModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
@@ -16,6 +16,7 @@ import * as redisStore from 'cache-manager-redis-store';
           ttl: configService.get<number>('REDIS_TTL'),
         };
       },
+      isGlobal: true,
     }),
   ],
 })

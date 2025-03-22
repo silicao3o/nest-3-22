@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/entities/user.entity';
@@ -6,6 +6,7 @@ import { LoginUserDto } from '../user/dto/login-user.dto';
 import { EmailService } from '../email/email.service';
 import { CACHE_MANAGER } from '@nestjs/common/cache';
 import { Cache } from 'cache-manager';
+import { VerifyEmailDto } from '../user/dto/verify-email.dto';
 
 @Injectable()
 export class AuthService {
@@ -49,5 +50,15 @@ export class AuthService {
       OTP += Math.floor(Math.random() * 10);
     }
     return OTP;
+  }
+
+  async verifyCode(verifyEmailDto: VerifyEmailDto): Promise<boolean> {
+    const { email, code } = verifyEmailDto;
+    const emailCodeByRedis = await this.cacheManger.get(email);
+    if (emailCodeByRedis !== code) {
+      throw new BadRequestException('Wrong code Provided');
+    }
+    await this.cacheManger.del(email);
+    return true;
   }
 }

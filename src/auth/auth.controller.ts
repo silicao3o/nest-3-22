@@ -7,6 +7,7 @@ import { RequestWithUser } from './interfaces/requestWithUser';
 import { ApiBody } from '@nestjs/swagger';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { SendEmailDto } from '../user/dto/send-email.dto';
+import { VerifyEmailDto } from '../user/dto/verify-email.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -26,5 +27,10 @@ export class AuthController {
   @Post('/send-email')
   async sendEmail(@Body() sendEmailDto: SendEmailDto): Promise<void> {
     return await this.authService.emailVerify(sendEmailDto.email);
+  }
+
+  @Post('verify-otp')
+  async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto): Promise<boolean> {
+    return await this.authService.verifyCode(verifyEmailDto);
   }
 }
