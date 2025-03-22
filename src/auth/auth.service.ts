@@ -1,15 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/entities/user.entity';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { EmailService } from '../email/email.service';
+import { CACHE_MANAGER } from '@nestjs/common/cache';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly emailService: EmailService,
+    @Inject(CACHE_MANAGER) private cacheManger: Cache,
   ) {}
 
   async signupUser(createUserDto: CreateUserDto): Promise<User> {
@@ -30,6 +33,9 @@ export class AuthService {
   //send email(email verification)
   async emailVerify(email: string): Promise<void> {
     const generateNumber = this.generateOTP();
+
+    await this.cacheManger.set(email, generateNumber);
+
     await this.emailService.sendEmail({
       to: email,
       subject: 'Elice Lab One Day Class - silica',

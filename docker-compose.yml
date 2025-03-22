@@ -28,6 +28,7 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - elicelab_db
+      - elicelab_redis
     networks:
       - elicelab-network
 
