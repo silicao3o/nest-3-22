@@ -29,10 +29,19 @@ export class AuthService {
 
   //send email(email verification)
   async emailVerify(email: string): Promise<void> {
+    const generateNumber = this.generateOTP();
     await this.emailService.sendEmail({
       to: email,
       subject: 'Elice Lab One Day Class - silica',
-      html: `<h1>Welcome to Elice Lab One Day Class</h1>`,
+      html: `<h1>Welcome to Elice Lab One Day Class ${generateNumber}</h1>`,
     });
+  }
+
+  generateOTP() {
+    let OTP = '';
+    for (let i = 1; i < 6; i++) {
+      OTP += Math.floor(Math.random() * 10);
+    }
+    return OTP;
   }
 }
